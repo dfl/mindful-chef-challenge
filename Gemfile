@@ -1,0 +1,5 @@
+gem 'rake'
+gem 'minitest'
+gem 'minitest-difftastic'
+gem 'minitest-reporters', '~> 1.6'
+gem 'shoulda-context', '~> 3.0.0.rc1'
