@@ -85,14 +85,10 @@ class RobotController
   # @private
   def move!(direction)
     case direction.to_sym
-    when :N
-      @y += 1
-    when :E
-      @x += 1
-    when :S
-      @y -= 1
-    when :W
-      @x -= 1
+    when :N then @y += 1
+    when :E then @x += 1
+    when :S then @y -= 1
+    when :W then @x -= 1
     end
 
     clamp_bounds_and_track_power_used!
