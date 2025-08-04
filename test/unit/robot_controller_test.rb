@@ -30,6 +30,21 @@ class RobotControllerTest < Minitest::Test
         end
       end
 
+      should "raise an error if command includes invalid direction" do
+        assert_raises(InvalidCommandError) do
+          @robot.parse_commands("N,E,X,W")
+        end
+    
+        assert_raises(InvalidCommandError) do
+          @robot.parse_commands(["N", "UP", "E"])
+        end
+    
+        assert_raises(InvalidCommandError) do
+          @robot.parse_commands(%i[N DOWN S])
+        end
+      end
+
+
       should "accept a string of commands" do
         @robot.parse_commands("N,E,S,W")
         assert_equal [0, 0], @robot.position
@@ -51,10 +66,27 @@ class RobotControllerTest < Minitest::Test
     end
 
     context "#move_to" do
+      should "raise an error if target position is out of bounds" do
+        assert_raises(ArgumentError) do
+          @robot.move_to(x: 11, y: 5)
+        end
+    
+        assert_raises(ArgumentError) do
+          @robot.move_to(x: 5, y: -1)
+        end
+      end
+      
       should "move to a given position" do
         @robot.move_to(x: 5, y: 7)
         assert_equal [5, 7], @robot.position
         assert_equal 12, @robot.power_used
+      end
+
+      should "not increase power if robot blocked by edge" do
+        robot = RobotController.new(x: 0, y: 0)
+        robot.parse_commands("S,W")
+        assert_equal [0, 0], robot.position
+        assert_equal 0, robot.power_used
       end
     end
   end
